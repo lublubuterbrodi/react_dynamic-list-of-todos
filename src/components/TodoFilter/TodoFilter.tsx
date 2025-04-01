@@ -1,4 +1,5 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
+import classNames from 'classnames';
 
 type Props = {
   filterStatus: string;
@@ -13,57 +14,45 @@ export const TodoFilter: React.FC<Props> = ({
   searchQuery,
   setSearchQuery,
 }) => {
-  return React.createElement(
-    'form',
-    { className: 'field has-addons' },
-    React.createElement(
-      'p',
-      { className: 'control' },
-      React.createElement(
-        'span',
-        { className: 'select' },
-        React.createElement(
-          'select',
-          {
-            'data-cy': 'statusSelect',
-            value: filterStatus,
-            onChange: (event: ChangeEvent<HTMLSelectElement>) =>
-              setFilterStatus(event.target.value),
-          },
-          React.createElement('option', { value: 'all' }, 'All'),
-          React.createElement('option', { value: 'active' }, 'Active'),
-          React.createElement('option', { value: 'completed' }, 'Completed'),
-        ),
-      ),
-    ),
-    React.createElement(
-      'p',
-      { className: 'control is-expanded has-icons-left has-icons-right' },
-      React.createElement('input', {
-        'data-cy': 'searchInput',
-        type: 'text',
-        className: 'input',
-        placeholder: 'Search...',
-        value: searchQuery,
-        onChange: (event: ChangeEvent<HTMLInputElement>) =>
-          setSearchQuery(event.target.value),
-      }),
-      React.createElement(
-        'span',
-        { className: 'icon is-left' },
-        React.createElement('i', { className: 'fas fa-magnifying-glass' }),
-      ),
-      searchQuery &&
-        React.createElement(
-          'span',
-          { className: 'icon is-right', style: { pointerEvents: 'all' } },
-          React.createElement('button', {
-            'data-cy': 'clearSearchButton',
-            type: 'button',
-            className: 'delete',
-            onClick: () => setSearchQuery(''),
-          }),
-        ),
-    ),
+  return (
+    <div className="field is-grouped">
+      <div className="control">
+        <div className="select">
+          <select
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value)}
+            data-cy="filter-status"
+          >
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="control">
+        <input
+          type="text"
+          className="input"
+          placeholder="Search todos..."
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          data-cy="search-input"
+        />
+      </div>
+
+      <div className="control">
+        <button
+          className={classNames('button', {
+            'is-primary': filterStatus === 'active',
+            'is-success': filterStatus === 'completed',
+            'is-light': filterStatus === 'all',
+          })}
+          onClick={() => setFilterStatus('all')}
+        >
+          Reset
+        </button>
+      </div>
+    </div>
   );
 };
