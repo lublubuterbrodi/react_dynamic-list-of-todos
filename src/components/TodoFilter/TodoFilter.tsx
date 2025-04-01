@@ -1,5 +1,4 @@
-import React from 'react';
-import classNames from 'classnames';
+import React, { ChangeEvent } from 'react';
 
 type Props = {
   filterStatus: string;
@@ -15,44 +14,48 @@ export const TodoFilter: React.FC<Props> = ({
   setSearchQuery,
 }) => {
   return (
-    <div className="field is-grouped">
-      <div className="control">
-        <div className="select">
+    <form className="field has-addons">
+      <p className="control">
+        <span className="select">
           <select
+            data-cy="statusSelect"
             value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value)}
-            data-cy="filter-status"
+            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+              setFilterStatus(event.target.value)
+            }
           >
             <option value="all">All</option>
             <option value="active">Active</option>
             <option value="completed">Completed</option>
           </select>
-        </div>
-      </div>
+        </span>
+      </p>
 
-      <div className="control">
+      <p className="control is-expanded has-icons-left has-icons-right">
         <input
+          data-cy="searchInput"
           type="text"
           className="input"
-          placeholder="Search todos..."
+          placeholder="Search..."
           value={searchQuery}
-          onChange={e => setSearchQuery(e.target.value)}
-          data-cy="search-input"
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setSearchQuery(event.target.value)
+          }
         />
-      </div>
-
-      <div className="control">
-        <button
-          className={classNames('button', {
-            'is-primary': filterStatus === 'active',
-            'is-success': filterStatus === 'completed',
-            'is-light': filterStatus === 'all',
-          })}
-          onClick={() => setFilterStatus('all')}
-        >
-          Reset
-        </button>
-      </div>
-    </div>
+        <span className="icon is-left">
+          <i className="fas fa-magnifying-glass"></i>
+        </span>
+        {searchQuery && (
+          <span className="icon is-right" style={{ pointerEvents: 'all' }}>
+            <button
+              data-cy="clearSearchButton"
+              type="button"
+              className="delete"
+              onClick={() => setSearchQuery('')}
+            />
+          </span>
+        )}
+      </p>
+    </form>
   );
 };
